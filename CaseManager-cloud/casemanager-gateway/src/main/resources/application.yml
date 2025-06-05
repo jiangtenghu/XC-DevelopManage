@@ -1,0 +1,124 @@
+server:
+  port: 8080
+  
+spring:
+  application:
+    name: casemanager-gateway
+  
+  # Redis配置
+  redis:
+    host: localhost
+    port: 6379
+    password: 
+    database: 0
+    timeout: 10000
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+  
+  # Spring Cloud Gateway配置
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        # 认证服务路由
+        - id: auth-service
+          uri: lb://casemanager-auth
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - StripPrefix=1
+        
+        # 用户服务路由
+        - id: user-service
+          uri: lb://casemanager-user
+          predicates:
+            - Path=/api/users/**
+          filters:
+            - StripPrefix=1
+        
+        # 项目服务路由
+        - id: project-service
+          uri: lb://casemanager-project
+          predicates:
+            - Path=/api/projects/**,/api/iterations/**
+          filters:
+            - StripPrefix=1
+        
+        # 测试用例服务路由
+        - id: testcase-service
+          uri: lb://casemanager-testcase
+          predicates:
+            - Path=/api/case-libraries/**,/api/test-cases/**
+          filters:
+            - StripPrefix=1
+        
+        # 测试计划服务路由
+        - id: testplan-service
+          uri: lb://casemanager-testplan
+          predicates:
+            - Path=/api/test-plans/**
+          filters:
+            - StripPrefix=1
+        
+        # 缺陷服务路由
+        - id: defect-service
+          uri: lb://casemanager-defect
+          predicates:
+            - Path=/api/defects/**
+          filters:
+            - StripPrefix=1
+        
+        # 测试报告服务路由
+        - id: report-service
+          uri: lb://casemanager-report
+          predicates:
+            - Path=/api/test-reports/**
+          filters:
+            - StripPrefix=1
+    
+    # 服务注册与发现配置
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    
+    # 断路器配置
+    circuitbreaker:
+      resilience4j:
+        enabled: true
+
+# Eureka配置
+eureka:
+  client:
+    service-url:
+      defaultZone: http://admin:admin123@localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+
+# 日志配置
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.http.server.reactive: DEBUG
+    org.springframework.web.reactive: DEBUG
+    reactor.netty: DEBUG
+    com.casemanager.gateway: DEBUG
+
+# Actuator配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

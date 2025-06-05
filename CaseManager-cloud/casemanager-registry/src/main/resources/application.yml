@@ -1,0 +1,44 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: casemanager-registry
+  security:
+    user:
+      name: admin
+      password: admin123
+
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+  client:
+    # 不向自己注册服务
+    register-with-eureka: false
+    # 不从自己获取服务注册信息
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@${eureka.instance.hostname}:${server.port}/eureka/
+  server:
+    # 关闭自我保护模式（开发环境使用）
+    enable-self-preservation: false
+    # 清理无效节点的时间间隔（毫秒）
+    eviction-interval-timer-in-ms: 10000
+
+# 日志配置
+logging:
+  level:
+    com.casemanager.registry: DEBUG
+    org.springframework.cloud.netflix.eureka: INFO
+    org.springframework.boot.autoconfigure.security: INFO
+
+# Actuator配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
