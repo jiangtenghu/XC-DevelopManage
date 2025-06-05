@@ -44,7 +44,6 @@ const Project: React.FC = () => {
   const [form] = Form.useForm();
   const [memberForm] = Form.useForm();
   const [activeTab, setActiveTab] = useState('all');
-
   // 获取项目列表
   useEffect(() => {
     if (activeTab === 'all') {
@@ -55,7 +54,7 @@ const Project: React.FC = () => {
         status: statusFilter || undefined
       }));
     } else if (activeTab === 'my') {
-      dispatch(fetchUserProjects({}));
+      dispatch(fetchUserProjects());
     } else if (activeTab === 'stats') {
       dispatch(fetchProjectStats());
     }
@@ -154,6 +153,14 @@ const Project: React.FC = () => {
         }));
         message.success('成员添加成功');
         memberForm.resetFields();
+
+        // 刷新当前项目的成员列表
+        if (editingProject) {
+          const result = await dispatch(fetchProject(editingProject._id));
+          if (result.payload) {
+            setEditingProject(result.payload as ProjectType);
+          }
+        }
       }
     } catch (error) {
       console.error('表单验证失败:', error);
@@ -165,6 +172,14 @@ const Project: React.FC = () => {
     try {
       await dispatch(removeProjectMember({ projectId, userId }));
       message.success('成员移除成功');
+      
+      // 刷新当前项目的成员列表
+      if (editingProject) {
+        const result = await dispatch(fetchProject(projectId));
+        if (result.payload) {
+          setEditingProject(result.payload as ProjectType);
+        }
+      }
     } catch (error) {
       message.error('移除成员失败');
     }
@@ -187,7 +202,7 @@ const Project: React.FC = () => {
       dataIndex: 'name',
       key: 'name',
       render: (text: string, record: ProjectType) => (
-        <a onClick={() => showViewModal(record)}>{text}</a>
+        <Button type="link" onClick={() => showViewModal(record)}>{text}</Button>
       )
     },
     {
