@@ -293,8 +293,11 @@ const defectSlice = createSlice({
         state.currentDefect = action.payload;
       }
     });
+    // 处理updateDefect异步操作被拒绝(rejected)时的状态更新
     builder.addCase(updateDefect.rejected, (state, action) => {
+      // 将loading状态置为false，表示异步操作结束
       state.loading = false;
+      // 将错误信息存储到state的error字段中，payload中包含具体的错误信息
       state.error = action.payload as string;
     });
 
@@ -334,6 +337,7 @@ const defectSlice = createSlice({
       state.loading = false;
       state.error = action.payload as string;
     });
+    
 
     // 上传附件
     builder.addCase(uploadAttachment.pending, (state) => {
@@ -350,6 +354,8 @@ const defectSlice = createSlice({
         state.currentDefect = action.payload;
       }
     });
+
+    
     builder.addCase(uploadAttachment.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
