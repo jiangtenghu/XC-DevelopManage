@@ -1,0 +1,29 @@
+# bootstrap.yml 模板 - 用于Nacos配置中心
+# 将此文件复制到每个服务的 src/main/resources 目录下，并修改相应的服务名称
+
+spring:
+  application:
+    name: ${SERVICE_NAME} # 替换为实际的服务名，如 casemanager-auth
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        namespace: # 可选，用于环境隔离
+        group: DEFAULT_GROUP # 可选，默认为 DEFAULT_GROUP
+        file-extension: yaml
+        refresh-enabled: true # 启用配置自动刷新
+        shared-configs:
+          - data-id: common-config.yaml # 共享配置文件
+            group: DEFAULT_GROUP
+            refresh: true
+        extension-configs:
+          - data-id: ${spring.application.name}-${spring.profiles.active}.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+      discovery:
+        server-addr: localhost:8848
+        namespace: # 与config保持一致
+        group: DEFAULT_GROUP
+        
+  profiles:
+    active: dev # 可以是 dev, test, prod 等
