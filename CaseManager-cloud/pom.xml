@@ -20,6 +20,7 @@
     <modules>
         <module>casemanager-common</module>
         <module>casemanager-gateway</module>
+        <module>casemanager-registry</module>
         <module>casemanager-auth</module>
         <module>casemanager-user</module>
         <module>casemanager-project</module>
