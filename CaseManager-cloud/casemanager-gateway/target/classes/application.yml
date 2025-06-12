@@ -87,22 +87,15 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8848
+      config:
+        server-addr: localhost:8848
+        file-extension: yaml
     
     # 断路器配置
     circuitbreaker:
       resilience4j:
         enabled: true
 
-# Eureka配置
-eureka:
-  client:
-    service-url:
-      defaultZone: http://admin:admin123@localhost:8761/eureka/
-    register-with-eureka: true
-    fetch-registry: true
-  instance:
-    prefer-ip-address: true
-    instance-id: ${spring.application.name}:${server.port}
 
 # 日志配置
 logging:

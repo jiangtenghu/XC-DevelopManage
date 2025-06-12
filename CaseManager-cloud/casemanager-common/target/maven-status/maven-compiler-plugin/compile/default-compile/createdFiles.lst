@@ -1,0 +1,4 @@
+com/casemanager/common/api/IErrorCode.class
+com/casemanager/common/api/ApiResponse.class
+com/casemanager/common/api/ResultCode.class
+com/casemanager/common/api/ApiResponse$ApiResponseBuilder.class

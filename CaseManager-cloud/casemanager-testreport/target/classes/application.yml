@@ -67,17 +67,6 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
 
-# Eureka配置
-eureka:
-  client:
-    service-url:
-      defaultZone: http://admin:admin123@localhost:8761/eureka/
-    register-with-eureka: true
-    fetch-registry: true
-  instance:
-    prefer-ip-address: true
-    instance-id: ${spring.application.name}:${server.port}
-
 # 日志配置
 logging:
   level:
