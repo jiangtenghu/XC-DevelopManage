@@ -160,6 +160,7 @@ class CompletableFutureUtilTest {
         CompletableFuture<Object> anyFuture = CompletableFutureUtil.anyOf(future1, future2, future3);
         Object result = CompletableFutureUtil.join(anyFuture);
         
+        
         assertEquals("Fast", result);
     }
 
@@ -173,7 +174,7 @@ class CompletableFutureUtilTest {
                 () -> 3 + 3
             ))
         );
-        
+
         assertEquals(Arrays.asList(2, 4, 6), results);
     }
 
@@ -196,22 +197,15 @@ class CompletableFutureUtilTest {
         CompletableFuture<String> future = CompletableFutureUtil.supplyAsync(() -> {
             throw new RuntimeException("Error");
         });
-        
+
+
+
         CompletableFuture<String> handledFuture = CompletableFutureUtil.exceptionally(
             future, 
             (Throwable throwable) -> "Error: " + throwable.getMessage()
         );
         
         assertTrue(CompletableFutureUtil.join(handledFuture).contains("Error"));
-    }
-
-    @Test
-    void testHandle() {
-        // 处理正常结果和异常
-        CompletableFuture<Integer> successFuture = CompletableFutureUtil.supplyAsync(() -> 42);
-        CompletableFuture<String> handledSuccess = CompletableFutureUtil.handle(
-            successFuture,
-            (result, error) -> error != null ? "Error" : "Result: " + result
         );
         assertEquals("Result: 42", CompletableFutureUtil.join(handledSuccess));
         
@@ -423,7 +417,7 @@ class CompletableFutureUtilTest {
                 }
             }
         );
-        
+
         assertEquals("Task Result", CompletableFutureUtil.join(future));
     }
 
